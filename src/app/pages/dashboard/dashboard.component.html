@@ -1,0 +1,108 @@
+<app-header></app-header>
+
+<div  style = "padding: 20px; margin-top: 4%;">
+    <div class = "row">
+        <div class ="col-md-6 flex-fill" style = "padding-top: 10px;">
+    <div class = "card h-100 "  >
+        <div class ="card-body ">
+            <ul class="list-group list-group-flush header">
+                <li class="list-group-item">
+                    <mat-toolbar class ="header-background">
+                    <h4 class ="text-muted">System Overview <i class="bi bi-speedometer" style ="color:brown; margin-left: 5px;"></i></h4>
+                    <span class="example-spacer"></span>
+                    <h4><i class="bi bi-telephone" style ="color:brown" matTooltip="Contact Developer"
+                        matTooltipPosition="above" matTooltipClass="tooltip"></i></h4>
+                    <h4 style ="margin-left: 10px;"><i class="bi bi-info-circle" style ="color: brown;"
+                        matTooltip="About System"
+                        matTooltipPosition="above" matTooltipClass="tooltip"></i></h4>
+                    
+                </mat-toolbar>
+                 </li>
+
+                 <li class ="list-group-item">
+                    <div class ="card   mt-3">
+                        <div class ="card-body">
+                            <ul class ="list-group list-group-flush">
+                                <li class ="list-group-item">
+                                    <h4 class ="text-muted"> <i class="bi bi-gear-wide-connected" style ="margin-right: 10px;"></i> Default Project</h4>
+
+                                    <div class = "mt-1" ><h5><strong>EMT</strong></h5></div>
+
+                                </li>
+
+                                <li class ="list-group-item">
+
+                                    <h4 class ="text-muted"> <i class="bi bi-gear-wide-connected" style ="margin-right: 10px;"></i> Records in Server</h4>
+
+                                    <div class = "mt-1"><h5><strong>34</strong></h5></div>
+
+                                    
+                                    <div class ="mt-4">
+                                        <button class = "btn btn-outline _btn-option">Format Server</button>
+                                    </div>
+                                    
+
+                                </li>
+                            </ul>
+                            
+
+                        </div>
+                    </div>
+                        
+                    
+                    
+                 </li>
+                </ul>
+    
+        </div>
+    </div>
+    </div>
+
+    <div class ="col-md-6 flex-fill " style = "padding-top: 10px;">
+        <div class = "card h-100" >
+            <div class ="card-body">
+                <ul class="list-group list-group-flush header">
+                    <li class="list-group-item">
+                        <mat-toolbar class ="header-background">
+                        <h4 class ="text-muted">Registered Projects 
+                            <i class="bi bi-journal-bookmark-fill" style ="color: brown;margin-left: 5px;"
+                           ></i></h4>
+                        <span class="example-spacer"></span>
+                        <h4><i class="bi bi-plus-circle-dotted " style ="color:brown"
+                            matTooltip="Add new Project"
+                            matTooltipPosition="right" matTooltipClass="tooltip"></i></h4>
+                    </mat-toolbar>
+                    </li>
+                    <li class="list-group-item">
+
+                                <ul class="list-group list-group-flush" *ngFor ="let project of projects">
+                                    <li class ="list-group-item " style ="border-bottom: 1px solid rgb(211, 211, 211);">
+                                     <h5 class ="text-muted">{{project.name}}</h5>
+
+                                     <span class="example-spacer"></span>
+                                     <button class ="btn btn-outline btn-option" matTooltip="Edit"
+                                     matTooltipPosition="below" matTooltipClass="tooltip"><i class="bi bi-pencil-fill fs-5"></i></button>
+                                     
+                                     <button class ="btn btn-outline btn-option" style = "margin-left: 10px;"
+                                     matTooltip="Delete"
+                                    matTooltipPosition="below" matTooltipClass="tooltip"><i class="bi bi-trash fs-5"></i></button>
+                                    
+                                    <button class ="btn btn-outline btn-option" style = "margin-left: 10px;"
+                                    matTooltip="Assign as Default"
+                                    matTooltipPosition="right" matTooltipClass="tooltip"><i class="bi bi-check2-all fs-5"></i></button>
+                                    </li></ul>
+    
+                            
+                      
+                    </li>
+                
+                </ul>
+                 
+            </div>
+        </div>
+        </div>
+
+
+</div>
+
+</div>

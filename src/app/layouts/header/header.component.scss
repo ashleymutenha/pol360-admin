@@ -1,0 +1,42 @@
+.example-spacer {
+    flex: 0.9 1 auto;
+  }
+
+.header-background{
+  background:#df8041;
+  height:35%
+}
+
+.menu-btn:hover{
+    background:#FAE5D3;
+    color:rgb(14, 1, 1)
+}
+
+.header-icon{
+  color:black
+}
+
+ .fb:hover{
+  color:blue
+}
+
+.tw:hover{
+  color:lightblue
+  
+}
+
+.btn-tw:hover{
+  background:black;
+  .tw{
+    color: lightblue;
+  }
+}
+
+.btn-fb:hover{
+  background:#FAE5D3;
+
+  .fb{
+    color:blue
+  }
+  
+}

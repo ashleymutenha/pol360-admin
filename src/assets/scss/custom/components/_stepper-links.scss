@@ -1,0 +1,97 @@
+//
+// Stepper Links
+//
+
+// Base
+.stepper.stepper-links {
+  margin-top: 50px;
+
+    ul {
+      list-style: none;
+    }
+
+    //ul.stepper-nav li:not(:last-child)::after {
+    //  background-color: #E6E6E6;
+    //  content: "";
+    //  position: absolute;
+    //  height: 1px;
+    //  width: calc(100% - 50px);
+    //  top: -25px;
+    //  left: calc(50% + 25px);
+    //}
+
+    .stepper-nav {
+        display: flex;
+        margin: 0 auto;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .stepper-item {
+          position: relative;
+          flex-shrink: 0;
+          margin: 1rem 1.5rem;
+
+          &:after {
+            content: " ";
+            position: absolute;
+            top: 2.3rem;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background-color: transparent;
+            transition: $transition-link;
+          }
+
+          .stepper-icon{
+            top: -50px;
+            left: calc(50% - 25px);
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 46px;
+            transition: 0.25s;
+            border-radius: 100%;
+            border: 2px solid #E6E6E6;
+            color: #E6E6E6;
+          }
+
+          .stepper-title {
+              color: $dark;
+              font-weight: 600;
+              font-size: 1rem;
+              text-transform: uppercase;
+              padding-top: 15px;
+          }
+
+          // Current
+          &.current {
+            transition: $transition-link;
+
+            .stepper-title {
+              color: $primary;
+            }
+
+            .stepper-icon {
+              color: $primary;
+            }
+
+            span {
+              border-color: $primary;
+            }
+
+            &:after {
+              background-color: $primary;
+            }
+          }
+
+          &.completed {
+            .stepper-title {
+              color: $gray-400;
+            }
+          }
+        }
+    }
+}

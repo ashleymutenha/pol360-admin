@@ -1,0 +1,57 @@
+.center {
+    width:92%;
+  border:1px solid brown;
+  margin: auto;
+   
+    padding: 10px;
+
+    overflow-y: auto;
+
+    height: 100%;
+  }
+
+.card{
+    border:1px solid brown;
+    margin: auto;
+}
+
+.inner-spacer{
+    flex: 0.7 1 auto;
+}
+
+.example-spacer {
+    flex: 0.9 1 auto;
+  }
+
+.header-background{
+    background: #ffff;
+    height:10%
+}
+.btn-option{
+    border-radius: 50%;
+}
+.btn-option ,._btn-option{
+    border-color: brown;
+}
+
+
+
+
+.btn-option:hover ,._btn-option:hover{
+    background: brown;
+    color:#ffff
+}
+
+.mat-tooltip{
+    font-size: 14px !important;
+    
+
+}
+
+.tooltip{
+    background:brown;
+    
+}
+.header .list-group-item{
+border-color: burlywood;
+}
