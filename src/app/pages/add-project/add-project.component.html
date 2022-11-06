@@ -1,1 +1,141 @@
-<p>add-project works!</p>
+<!-- <app-header></app-header> -->
+
+<div>
+    <div class = "form-group">
+        <ul class = "list-group list-group-flush">
+            <li class ="list-group-item">
+        <mat-toolbar class ="header-background">
+        <mat-form-field appearance="standard">
+            <mat-label class ="fs-3 text-muted">Project Name:</mat-label>
+            
+            <input matInput placeholder="Project Name" class ="input" (input) ="editProjectName($event)" class ="fs-3">
+            
+
+          </mat-form-field>
+
+          <span class="example-spacer"></span>
+
+          
+
+          </mat-toolbar></li>
+          <li class ="list-group-item">
+          
+           <span><h3 style ="color:brown" class ="mt-3">Product Fields</h3> </span>
+            
+            <!-- <i class="bi bi-plus-circle-dotted " style ="color:brown"
+            matTooltip="Add Category"
+            matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addCategory()"></i></h4></span> -->
+
+           <div *ngIf ="project.length ==0" class ="mt-3">
+            <button class = "btn btn-dark" style ="border-radius: 50%;"> <i class="bi bi-exclamation-triangle fs-4 text-white"></i> </button> <span style ="margin-left: 10px;" class ="fs-4">No Categories</span>
+           </div>
+           <ng-container *ngFor = "let category of categories ; index as i">
+            <div  class ="mt-2">
+              <mat-toolbar class ="header-background">
+                <!-- <i class="bi bi-trash" style = "color:darkred" matTooltip="Delete category"
+                matTooltipPosition="right" matTooltipClass="tooltip"></i> -->
+                
+                <!-- <mat-form-field appearance="standard" class =" border-0" style = "margin-left: 10px;">
+                  
+                   < <mat-label> Category Name:</mat-label>
+                    
+                    <input matInput placeholder="First Name" class ="input"  >
+                    </mat-form-field> -->
+                     
+
+                    <span class="example-spacer"></span>
+
+                    </mat-toolbar>
+                    
+                    <div class ="mt-2" style ="margin-left: 15px;">
+                       <div *ngFor  ="let field of categories[i].fields;">
+                      <mat-form-field appearance="standard" class ="form-control border-0">
+                  
+                        <mat-label>Field Name:</mat-label>
+                        
+                        <input matInput placeholder="Field Name" class ="input"  >
+                        </mat-form-field>
+
+                    <mat-form-field appearance="standard" class ="form-control border-0">
+                      <mat-label>Type</mat-label>
+                      <mat-select>
+                        
+                        <mat-option value="Text" >Text</mat-option>
+                        <mat-option value="Text" >Number</mat-option>
+                        <mat-option value="Date" >Date</mat-option>
+                        <mat-option value="Dropdown" >Dropdown</mat-option>
+                      </mat-select>
+                    </mat-form-field>
+
+                    <h5 class ="text-muted">Optional</h5>
+                      <div class ="mt-2" style = "margin-left: 10px;">
+                        <h6 style ="color: burlywood;">Set Conditions</h6>
+                       
+                          <div>
+
+                          <!-- <mat-label >Age</mat-label> -->
+          
+                              <div class ="mt-1">
+                              <mat-form-field appearance="standard" class ="border-0 ">
+                  
+                                <mat-label>Minimum Age</mat-label>
+                                
+                                <input matInput placeholder="Minimum Age" class ="input">
+                                </mat-form-field></div>
+
+                                <div class ="mt-1">
+                                  <mat-form-field appearance="standard" class ="border-0">
+                  
+                                    <mat-label>Maximum Age</mat-label>
+                                    
+                                    <input matInput placeholder="Maximum Age" class ="input">
+                                    </mat-form-field>
+
+                                </div></div>
+          
+                              
+                        
+
+                      </div>
+                      <mat-toolbar class ="header-background">
+                        <span class="example-spacer"></span>
+                      <i class="bi bi-trash" style = "color:darkred" matTooltip="Delete Field" 
+                      matTooltipPosition="right" matTooltipClass="tooltip" (click) ="deleteField(i)"></i> <h4 style ="margin-left: 10px;"><i class="bi bi-plus-circle-dotted " style ="color:brown"
+                                  matTooltip="Add Field"
+                                  matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addField(i)" ></i></h4>
+                                  </mat-toolbar>
+                      </div>
+
+                     
+                      </div>
+
+                      <mat-toolbar class ="header-background">
+                        <!-- <mat-form-field appearance="standard" class =" border-0">
+                          
+                            <mat-label>Category Name:</mat-label>
+                            
+                            <input matInput placeholder="First Name" class ="input"  >
+                            </mat-form-field> --> 
+        
+                            <span class="example-spacer"></span>
+        
+                             <!-- <i class="bi bi-trash" style = "color:darkred" matTooltip="Delete Field"
+                  matTooltipPosition="right" matTooltipClass="tooltip"></i> <h4 style ="margin-left: 10px;"-->
+                    
+                    <i class="bi bi-plus-circle-dotted " style ="color:brown"
+                              matTooltip="Add Field"
+                              matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addField(i)" *ngIf= "categories[i].fields.length ==0"></i>
+                            </mat-toolbar> 
+
+                    
+                
+
+            </div>
+          
+           </ng-container>
+          </li></ul>
+
+         
+    </div>
+
+</div>

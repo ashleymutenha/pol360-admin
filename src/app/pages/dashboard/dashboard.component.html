@@ -1,7 +1,7 @@
 <app-header></app-header>
 
 <div  style = "padding: 20px; margin-top: 4%;">
-    <div class = "row">
+    <div class = "row" *ngIf = "showDashboard">
         <div class ="col-md-6 flex-fill" style = "padding-top: 10px;">
     <div class = "card h-100 "  >
         <div class ="card-body ">
@@ -10,8 +10,8 @@
                     <mat-toolbar class ="header-background">
                     <h4 class ="text-muted">System Overview <i class="bi bi-speedometer" style ="color:brown; margin-left: 5px;"></i></h4>
                     <span class="example-spacer"></span>
-                    <h4><i class="bi bi-telephone" style ="color:brown" matTooltip="Contact Developer"
-                        matTooltipPosition="above" matTooltipClass="tooltip"></i></h4>
+                    <!-- <h4><i class="bi bi-telephone" style ="color:brown" matTooltip="Contact Developer"
+                        matTooltipPosition="above" matTooltipClass="tooltip"></i></h4> -->
                     <h4 style ="margin-left: 10px;"><i class="bi bi-info-circle" style ="color: brown;"
                         matTooltip="About System"
                         matTooltipPosition="above" matTooltipClass="tooltip"></i></h4>
@@ -70,7 +70,7 @@
                         <span class="example-spacer"></span>
                         <h4><i class="bi bi-plus-circle-dotted " style ="color:brown"
                             matTooltip="Add new Project"
-                            matTooltipPosition="right" matTooltipClass="tooltip"></i></h4>
+                            matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addProject()"></i></h4>
                     </mat-toolbar>
                     </li>
                     <li class="list-group-item">
@@ -100,9 +100,24 @@
                  
             </div>
         </div>
+
+       
         </div>
 
 
 </div>
+<div *ngIf = "showAdd">
+    <div class="card card-add">
+        
+        <div class ="card-body">
+            <div class =" border-0"  >
 
+                <i class="bi bi-x-circle fs-1" style ="color:brown" (click) ="closeAddProject()"></i>
+            
+            </div>
+<app-add-project></app-add-project>
+</div>
+</div>
+
+</div>
 </div>
