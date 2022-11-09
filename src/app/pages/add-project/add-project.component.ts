@@ -135,12 +135,12 @@ specificDate:any
       }
 
      else{
-       __id = e.options.length 
+       __id = e.options[e.options.length -1].id+1 
      }
 
     optionStructure.id =__id
 
-    console.log(optionStructure)
+
     e.options.push(optionStructure)
       }
     }
@@ -238,7 +238,7 @@ selectedConditionType(ind:any,name:any,innerID:any,outerID:any){
   }
 
   this.filterCategoriesByID(innerID,outerID)[ind].type =type
-  console.log(">>>>>", this.categories)
+ 
 }
 
 
@@ -275,15 +275,7 @@ selectDateFieldCondition(event:any,ind:any,name:any,innerID:any,outerID:any){
 
   }
 
-  setDateConditionValues(ind:any,innerID:any,outerID:any,identifier:any,event:any){
-
-    if(identifier =='specificDate'){
-      console.log("Date is ",event.target.value)
-      this.filterCategoriesByID(innerID,outerID)[ind].value.specificDate = event.target.value
-    }
-
-
-  }
+ 
 
  
 
