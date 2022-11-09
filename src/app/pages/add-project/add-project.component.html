@@ -1,4 +1,4 @@
-<!-- <app-header></app-header> -->
+
 
 <div>
     <div class = "form-group">
@@ -6,7 +6,7 @@
             <li class ="list-group-item">
         <mat-toolbar class ="header-background">
         <mat-form-field appearance="standard">
-            <mat-label class ="fs-3 text-muted">Project Name:</mat-label>
+            <mat-label class ="fs-3 text-muted">Broker Name:</mat-label>
             
             <input matInput placeholder="Project Name" class ="input" (input) ="editProjectName($event)" class ="fs-3">
             
@@ -20,60 +20,52 @@
           </mat-toolbar></li>
           <li class ="list-group-item">
           
-           <span><h3 style ="color:brown" class ="mt-3">Product Fields</h3> </span>
-            
-            <!-- <i class="bi bi-plus-circle-dotted " style ="color:brown"
-            matTooltip="Add Category"
-            matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addCategory()"></i></h4></span> -->
+           <span><h3 style ="color:brown" class ="mt-3" *ngIf= "fields.length !=0" (click) ="addField()">Product Fields</h3> </span>
+           <button class ="btn btn-outline rounded-pill btn-add-field fs-4" style = "border-color: brown;"  *ngIf= "categories.length ==0" (click) ="addField()">Add Field   <i class="bi bi-plus-circle-dotted "></i></button>
 
-           <div *ngIf ="project.length ==0" class ="mt-3">
-            <button class = "btn btn-dark" style ="border-radius: 50%;"> <i class="bi bi-exclamation-triangle fs-4 text-white"></i> </button> <span style ="margin-left: 10px;" class ="fs-4">No Categories</span>
-           </div>
-           <ng-container *ngFor = "let category of categories ; index as i">
+            
+          
+          
+           <div *ngFor = "let category of categories   ; let i = index" [attr.data-index]="i">
             <div  class ="mt-2">
               <mat-toolbar class ="header-background">
-                <!-- <i class="bi bi-trash" style = "color:darkred" matTooltip="Delete category"
-                matTooltipPosition="right" matTooltipClass="tooltip"></i> -->
-                
-                <!-- <mat-form-field appearance="standard" class =" border-0" style = "margin-left: 10px;">
-                  
-                   < <mat-label> Category Name:</mat-label>
-                    
-                    <input matInput placeholder="First Name" class ="input"  >
-                    </mat-form-field> -->
-                     
+               
 
                     <span class="example-spacer"></span>
 
                     </mat-toolbar>
                     
                     <div class ="mt-2" style ="margin-left: 15px;">
-                       <div *ngFor  ="let field of categories[i].fields;">
+                       <div  >
+                        <button class ="btn btn-light " style ="border-radius: 50%;">{{i+1}}</button>
+
                       <mat-form-field appearance="standard" class ="form-control border-0">
                   
                         <mat-label>Field Name:</mat-label>
                         
-                        <input matInput placeholder="Field Name" class ="input"  >
+                        <input matInput placeholder="Field Name" class ="input" (input) = "editField('name',category.id,$event)" >
                         </mat-form-field>
 
                     <mat-form-field appearance="standard" class ="form-control border-0">
                       <mat-label>Type</mat-label>
-                      <mat-select>
+                      <mat-select (selectionChange)= "getFieldType($event ,category.id)" >
                         
-                        <mat-option value="Text" >Text</mat-option>
+                        <mat-option value="Text"  >Text</mat-option>
                         <mat-option value="Text" >Number</mat-option>
                         <mat-option value="Date" >Date</mat-option>
-                        <mat-option value="Dropdown" >Dropdown</mat-option>
+                        <mat-option value="Dropdown"  >Dropdown</mat-option>
                       </mat-select>
                     </mat-form-field>
 
-                    <h5 class ="text-muted">Optional</h5>
+                    <div *ngIf ="category.type =='Dropdown'">
+                    <h5 class ="text-muted">Options</h5>
                       <div class ="mt-2" style = "margin-left: 10px;">
-                        <h6 style ="color: burlywood;">Set Conditions</h6>
+                        
+                        <button class ="btn btn mt-1" style ="background:brown;color:#ffff" (click) =" addOption(category.id,$event)">Add Option</button>
                        
-                          <div>
+                          <!--div>
 
-                          <!-- <mat-label >Age</mat-label> -->
+                          
           
                               <div class ="mt-1">
                               <mat-form-field appearance="standard" class ="border-0 ">
@@ -91,51 +83,182 @@
                                     <input matInput placeholder="Maximum Age" class ="input">
                                     </mat-form-field>
 
-                                </div></div>
+                                </div></div-->
+
+                      <div *ngFor = "let option of category.options"> 
+
+                        <mat-toolbar class = "bg-white mt-3">
+                        <i class="bi bi-trash " style = "color:darkred" matTooltip="Delete Option" 
+                        matTooltipPosition="right" matTooltipClass="tooltip"  (click) ="deleteOption(option.id,category.id)"></i>
+
+                      <mat-form-field appearance="standard" class =" border-0" style ="margin-left: 10px;">
+                        
+                        <mat-label>Option</mat-label>
+                        
+                        <input matInput placeholder="Field Name" class ="input" (input) ="setConditionName(option.id, category.id,$event)"  >
+                        </mat-form-field>
+                        <span class="example-spacer"></span>
+                        </mat-toolbar>
+                        
+                        <h6 style ="color: burlywood;" class ="mt-2 mb-1">Set Conditions (Optional)</h6>
+                        <div *ngFor  ="let field of filterCategoriesByID(option.id,category.id) ;let o =index">
+                            <h5 style ="margin-left: 15px;">Condition {{o +1}}</h5>
+                        <mat-form-field appearance="standard" class ="form-control border-0">
+                          <mat-label>Select Field you want to apply condition to:</mat-label>
+                        <mat-select  >
+                          
+                          <mat-option *ngFor  ="let field of categories"  [value] = "field.name" (click) ="selectedConditionType(o,field.name ,option.id,category.id)">
+                            
+                            <div *ngIf ="field.name!=category.name" >{{field.name}}</div></mat-option>
+                         
+                        </mat-select></mat-form-field>
+                        
+
+                        <!--    Conditions  Section-->
+                        <div>
+                          <!--    if Condition is Date-->
+
+      <div style ="margin-left: 9px;color: brown;" *ngIf ="field.type =='Date'">
+        
+        
+        
+          <span class ="" >
+            <div><input type = "radio" class = "form-check-input" name ="dateController" value ="specificDate" (change) ="selectDateFieldCondition($event,o,field.name ,option.id,category.id)"> Set as Specific Date
+                
+          </div></span>
+
+          <mat-form-field appearance="standard" class ="form-control mt-1 border-0" *ngIf ="showDateCondition == 'specificDate'">
+            <mat-label>Set Date</mat-label>
+            <mat-datepicker-toggle matSuffix [for]="picker" class ="datePicker" ></mat-datepicker-toggle>
+            <input matInput [matDatepicker]="picker"   readonly placeholder ="Select Date" class ="input" [(ngModel)] ="filterCategoriesByID(option.id,category.id)[o].value.specificDate">
+            <mat-hint>MM/DD/YYYY</mat-hint>
+            
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          
+                            <div>
+                              
+                              <div><span class =" mt-1" ><input type = "radio" class = "form-check-input" name ="dateController"  value ="numericBoundaries" (change) ="selectDateFieldCondition($event,o,field.name ,option.id,category.id)"> Set as Numeric Boundaries</span>
+                              </div>
+                              
+                              <div *ngIf ="showDateCondition == 'numericBoundaries'">
+                              <mat-form-field appearance="standard" class ="form-control border-0">
+                  
+                                <mat-label>Minimum  Numeric Value:</mat-label>
+                                
+                                <input matInput placeholder="Minimum Numeric Value" class ="input"  type = "number" [(ngModel)] ="filterCategoriesByID(option.id,category.id)[o].value.MinimumNumber">
+                                </mat-form-field>
+                                
+                                <div>
+                                <mat-form-field appearance="standard" class ="form-control mt-2 border-0">
+                  
+                                  <mat-label>Maximum  Numeric Value:</mat-label>
+                                  
+                                  <input matInput placeholder="Maximum Numeric Value" class ="input"  type = "number" [(ngModel)] ="filterCategoriesByID(option.id,category.id)[o].value.MaximumNumber">
+                                  </mat-form-field></div></div>
+                                
+
+                            
+                              <div><span class =" mt-1" ><input type = "radio" class = "form-check-input" name ="dateController"  value ="dateBoundaries" (change) ="selectDateFieldCondition($event,o,field.name ,option.id,category.id)"> Set as Date Boundaries</span>
+                              </div>
+                              
+                              <div *ngIf ="showDateCondition == 'dateBoundaries'">
+                              <mat-form-field appearance="standard" class ="form-control mt-1 border-0">
+                                <mat-label>Minimum Date</mat-label>
+                                <mat-datepicker-toggle matSuffix [for]="picker2" class ="datePicker" ></mat-datepicker-toggle>
+                                <input matInput [matDatepicker]="picker2"   readonly placeholder ="Select Minimum Date" class ="input" [(ngModel)] ="filterCategoriesByID(option.id,category.id)[o].value.MinimumDate">
+                                <mat-hint>MM/DD/YYYY</mat-hint>
+                                
+                                <mat-datepicker #picker2></mat-datepicker>
+                              </mat-form-field>
+
+                              <div>
+                                <mat-form-field appearance="standard" class ="form-control mt-1 border-0">
+                                  <mat-label>Maximum Date</mat-label>
+                                  <mat-datepicker-toggle matSuffix [for]="picker3" class ="datePicker" ></mat-datepicker-toggle>
+                                  <input matInput [matDatepicker]="picker3"   readonly placeholder ="Select Maximum Date" class ="input" [(ngModel)] ="filterCategoriesByID(option.id,category.id)[o].value.MaximumDate">
+                                  <mat-hint>MM/DD/YYYY</mat-hint>
+                                  
+                                  <mat-datepicker #picker3></mat-datepicker>
+                                </mat-form-field>
+                              </div></div>
+                            </div>
+
+                            <div>
+
+                             
+
+                            </div>
+                          
+                          
+                          </div>
+                        </div>
+
+                        <mat-toolbar class ="header-background">
+
+                        
+                          <span class="example-spacer"></span>
+      
+                          <i class="bi bi-trash " style = "color:darkred" matTooltip="Delete Condition" 
+                        matTooltipPosition="right" matTooltipClass="tooltip" (click) ="deleteCondition(o,option.id
+                        ,category.id)"></i>
+                  
+                          </mat-toolbar>
+                      
+                      </div>
+
+
+                         
+
+                        <mat-toolbar class ="header-background">
+                         
+                            <i class="bi bi-plus-circle-fill" style = "color:darkred" matTooltip="Add Condition" 
+                            matTooltipPosition="right" matTooltipClass="tooltip" (click) =" addCondition(option.id,category.id,$event)"></i>
+                        
+                          <span class="example-spacer"></span>
+                         </mat-toolbar>
+                        </div>
+
+
+                                
+
+                                
           
                               
                         
 
                       </div>
-                      <mat-toolbar class ="header-background">
+
+
+                      
+                    
+                    
+                    
+                    
+                    </div>
+                      <mat-toolbar class ="header-background mt-2">
                         <span class="example-spacer"></span>
                       <i class="bi bi-trash" style = "color:darkred" matTooltip="Delete Field" 
                       matTooltipPosition="right" matTooltipClass="tooltip" (click) ="deleteField(i)"></i> <h4 style ="margin-left: 10px;"><i class="bi bi-plus-circle-dotted " style ="color:brown"
                                   matTooltip="Add Field"
-                                  matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addField(i)" ></i></h4>
+                                  matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addField()" ></i></h4>
                                   </mat-toolbar>
                       </div>
 
                      
                       </div>
 
-                      <mat-toolbar class ="header-background">
-                        <!-- <mat-form-field appearance="standard" class =" border-0">
-                          
-                            <mat-label>Category Name:</mat-label>
-                            
-                            <input matInput placeholder="First Name" class ="input"  >
-                            </mat-form-field> --> 
-        
-                            <span class="example-spacer"></span>
-        
-                             <!-- <i class="bi bi-trash" style = "color:darkred" matTooltip="Delete Field"
-                  matTooltipPosition="right" matTooltipClass="tooltip"></i> <h4 style ="margin-left: 10px;"-->
-                    
-                    <i class="bi bi-plus-circle-dotted " style ="color:brown"
-                              matTooltip="Add Field"
-                              matTooltipPosition="right" matTooltipClass="tooltip" (click) ="addField(i)" *ngIf= "categories[i].fields.length ==0"></i>
-                            </mat-toolbar> 
+                       
 
                     
                 
 
             </div>
           
-           </ng-container>
+          </div>
           </li></ul>
 
-         
+         <button class ="btn btn rounded-pill" style = "background:brown;color:#ffff" (click) ="saveBroker()" *ngIf= "categories.length !=0">Save</button>
     </div>
 
 </div>

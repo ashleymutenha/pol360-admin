@@ -46,7 +46,10 @@ import { AddProjectComponent } from './pages/add-project/add-project.component';
     MatInputModule,
     MatDatepickerModule,
     MatSelectModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatNativeDateModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
