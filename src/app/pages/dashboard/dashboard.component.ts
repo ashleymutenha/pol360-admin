@@ -1,6 +1,7 @@
 import { Component, OnInit,ViewEncapsulation } from '@angular/core';
-import { AddProjectComponent } from '../add-project/add-project.component';
-
+import { GetBrokerService } from 'src/app/core/services/get-broker.service';
+import { DeleteBrokerService } from 'src/app/core/services/delete-broker.service';
+import { SetasDefaultService } from 'src/app/core/services/setas-default.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -9,27 +10,109 @@ import { AddProjectComponent } from '../add-project/add-project.component';
 })
 export class DashboardComponent implements OnInit {
 
-  projects = [{'name':'EMT'},{'name':'ZESA'},{'name':'JMB'}]
+  // projects = [{'name':'EMT'},{'name':'ZESA'},{'name':'JMB'}]
 
   showAdd = false
   showDashboard = true
+  brokers:any =[]
+  showEdit = false
+  brokerTobeEdited:any
+  spin =true
+  spin2 =true
+  brokerName:any
 
-  constructor() { }
+  activeBroker:any
+
+  constructor(private __getBrokers:GetBrokerService, private __deleteBroker:DeleteBrokerService,private _setAsDefault:SetasDefaultService) { }
 
   ngOnInit(): void {
 
 
-    
+    this.getBrokers()
   }
 
   addProject(){
     this.showDashboard =false
     this.showAdd =true
+    this.showEdit = false
   }
 
   closeAddProject(){
     this.showDashboard =true
     this.showAdd =false
+    this.showEdit =false
+    this.spin =true
+    this.getBrokers()
+  }
+
+ 
+
+  getBrokers(){
+    this.brokers =[]
+    this.__getBrokers.getBrokers().subscribe(res=>{
+     if(res.response =='success'){
+
+     this.__getBrokers.brokers =res.data
+      for (var i of res.data){
+        if(i.status =='active'){
+          this.activeBroker =i.brokerName
+        }
+        this.brokers.push(i)
+      }
+      this.spin =false
+      this.spin2 =false
+    }
+    })
+    
+    
+  }
+
+  deleteBroker(name:any){
+  this.spin =true
+  this.spin2 =true
+   let data = {'brokerName':name
+
+    }
+   this.__deleteBroker.deleteBrokerService(data).subscribe(res=>{
+   if(res.response =='success'){
+    this.getBrokers()
+   }
+   })
+  }
+
+  editBroker(brokerValue:any){
+   
+    this.brokerTobeEdited = brokerValue.productInfo
+    this.brokerName = brokerValue.brokerName
+
+
+    this.showAdd = false
+    this.showDashboard =false
+    this.showEdit = true
+
+  }
+
+  closeEditBroker(){
+    this.showAdd = false
+    this.showDashboard =true
+    this.showEdit = false
+    this.spin = true
+    this.spin2 =true
+    this.getBrokers()
+  }
+
+  setBrokerAsDefault(name:any){
+   let data ={
+    'brokerName':name
+   }
+
+   this._setAsDefault.setAsDefault(data).subscribe(res=>{
+      if(res.response =='success'){
+        this.getBrokers()
+      }
+   })
+
   }
 
 }
+

@@ -5,7 +5,13 @@
         <div class ="col-md-6 flex-fill" style = "padding-top: 10px;">
     <div class = "card h-100 "  >
         <div class ="card-body ">
-            <ul class="list-group list-group-flush header">
+            <div *ngIf="spin2">
+
+                <span class = "loader" style="margin-left: 50%; margin-top: 15%"></span>
+
+
+                </div>
+            <ul class="list-group list-group-flush header" *ngIf="!spin2">
                 <li class="list-group-item">
                     <mat-toolbar class ="header-background">
                     <h4 class ="text-muted">System Overview <i class="bi bi-speedometer" style ="color:brown; margin-left: 5px;"></i></h4>
@@ -26,7 +32,10 @@
                                 <li class ="list-group-item">
                                     <h4 class ="text-muted"> <i class="bi bi-gear-wide-connected" style ="margin-right: 10px;"></i> Default Broker</h4>
 
-                                    <div class = "mt-1" ><h5><strong>EMT</strong></h5></div>
+                                    <div class = "mt-1" *ngIf ="activeBroker !=null"><h5><strong>{{activeBroker}}</strong></h5></div>
+
+                                    <div *ngIf ="activeBroker ==null"><button class = "btn btn" style ="border-radius: 50%; background:brown;color:white"><i class="bi bi-exclamation-triangle  text-white fs-5"
+                                        ></i></button> <span style = "margin-left:15px;color:brown" class="col-sm-9 mt-2 fs-5" >No default Broker Set!</span></div>
 
                                 </li>
 
@@ -61,7 +70,14 @@
     <div class ="col-md-6 flex-fill " style = "padding-top: 10px;">
         <div class = "card h-100" >
             <div class ="card-body">
-                <ul class="list-group list-group-flush header">
+
+                <div *ngIf="spin">
+
+                    <span class = "loader" style="margin-left: 50%; margin-top: 15%"></span>
+
+
+                    </div>
+                <ul class="list-group list-group-flush header" *ngIf ="!spin">
                     <li class="list-group-item">
                         <mat-toolbar class ="header-background">
                         <h4 class ="text-muted">Registered Brokers 
@@ -75,21 +91,27 @@
                     </li>
                     <li class="list-group-item">
 
-                                <ul class="list-group list-group-flush" *ngFor ="let project of projects">
-                                    <li class ="list-group-item " style ="border-bottom: 1px solid rgb(211, 211, 211);">
-                                     <h5 class ="text-muted">{{project.name}}</h5>
+                        
+          <div style = "padding-top:20%" *ngIf = "brokers.length ==0"><button class = "btn btn" style ="border-radius: 50%;background:brown;color:white"><i class="bi bi-exclamation-triangle  text-white fs-4"
+            ></i></button> <span style = "margin-left:25px;color:brown" class="col-sm-9 mt-2 fs-4"  >No Brokers Registered </span></div>
+
+                                <ul class="list-group list-group-flush" *ngFor ="let broker of brokers" >
+                                    <li class ="list-group-item " style ="border-bottom: 1px solid rgb(211, 211, 211);" *ngIf = "brokers.length !=0">
+                                     <h5 class ="text-muted">{{broker.brokerName}}</h5>
+
+                                     
 
                                      <span class="example-spacer"></span>
                                      <button class ="btn btn-outline btn-option" matTooltip="Edit"
-                                     matTooltipPosition="below" matTooltipClass="tooltip"><i class="bi bi-pencil-fill fs-5"></i></button>
+                                     matTooltipPosition="below" matTooltipClass="tooltip" (click) ="editBroker(broker)"><i class="bi bi-pencil-fill fs-5"></i></button>
                                      
                                      <button class ="btn btn-outline btn-option" style = "margin-left: 10px;"
                                      matTooltip="Delete"
-                                    matTooltipPosition="below" matTooltipClass="tooltip"><i class="bi bi-trash fs-5"></i></button>
+                                    matTooltipPosition="below" matTooltipClass="tooltip" (click) ="deleteBroker(broker.brokerName)"><i class="bi bi-trash fs-5"></i></button>
                                     
                                     <button class ="btn btn-outline btn-option" style = "margin-left: 10px;"
                                     matTooltip="Assign as Default"
-                                    matTooltipPosition="right" matTooltipClass="tooltip"><i class="bi bi-check2-all fs-5"></i></button>
+                                    matTooltipPosition="right" matTooltipClass="tooltip" (click) ="setBrokerAsDefault(broker.brokerName)"><i class="bi bi-check2-all fs-5"></i></button>
                                     </li></ul>
     
                             
@@ -118,6 +140,28 @@
 
 
 <app-add-project></app-add-project>
+
+
+
+
+</div>
+</div>
+
+</div>
+<div *ngIf ="showEdit">
+
+
+    <div class="card card-add">
+        
+        <div class ="card-body">
+            <div class =" border-0"  >
+
+                <i class="bi bi-x-circle fs-1" style ="color:brown" (click) ="closeEditBroker()" ></i>
+            
+            </div>
+
+
+<app-add-project [categories]  = "brokerTobeEdited" [brokerName] ="brokerName"></app-add-project>
 
 
 

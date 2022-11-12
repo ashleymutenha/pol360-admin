@@ -1,6 +1,7 @@
-import { Component, OnInit,ViewChild,ElementRef } from '@angular/core';
+import { Component, OnInit,ViewChild,ElementRef,Input } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-
+import {AddBrokerService} from '../../core/services/add-broker.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-add-project',
   templateUrl: './add-project.component.html',
@@ -8,6 +9,15 @@ import { MatSelectChange } from '@angular/material/select';
 })
 export class AddProjectComponent implements OnInit {
 
+successReg:any
+failureReg:any
+
+brokerStructure = {
+  'brokerName':'',
+  'productInfo':[],
+  'status':'inactive'
+
+}
  
 categoryStructure:any  ={
   'name':'',
@@ -17,9 +27,12 @@ categoryStructure:any  ={
 
 
 
+
 project:any =[]
 
-categories:any =[]
+@Input() categories:any =[]
+
+@Input() brokerName:any
 
 fields:any =[]
 
@@ -31,7 +44,10 @@ currentIndex:any
 
 specificDate:any
 
-  constructor() { }
+brokers:any =[]
+spin  = false
+
+  constructor(private __addBroker:AddBrokerService,private router:Router) { }
 
   ngOnInit(): void {
 
@@ -41,9 +57,7 @@ specificDate:any
 
 
   editProjectName(event:any){
-   for (var i in this.project){
-
-   }
+   this.brokerStructure.brokerName = event.target.value
 
   }
 
@@ -167,7 +181,7 @@ specificDate:any
        for (var i of e.options){
         if(i.id ==innerID){
           let value = {
-            
+            'name':''
           }
 
           i.conditions.push(value)
@@ -216,9 +230,6 @@ deleteCondition(ind:any,innerID:any,outerID:any ){
 }
 
 
-saveBroker(){
-  console.log(this.categories)
-}
 
 selectedConditionType(ind:any,name:any,innerID:any,outerID:any){
   let type:any
@@ -227,6 +238,14 @@ selectedConditionType(ind:any,name:any,innerID:any,outerID:any){
     if(field.name ==name){
 
       type = field.type
+
+      if(type =='Date'){
+
+        this.showDateCondition = "specificDate"
+        this.filterCategoriesByID(innerID,outerID)[ind].value ={'specificDate':''}
+
+      
+      }
       this.filterCategoriesByID(innerID,outerID)[ind].name =name
 
 
@@ -238,6 +257,18 @@ selectedConditionType(ind:any,name:any,innerID:any,outerID:any){
   }
 
   this.filterCategoriesByID(innerID,outerID)[ind].type =type
+  
+  let __id:any
+  if(this.filterCategoriesByID(innerID,outerID).length ==0){
+    __id =0
+  }
+
+  else{
+    __id = this.filterCategoriesByID(innerID,outerID)[this.filterCategoriesByID(innerID,outerID).length -1].id+1
+
+  }
+  this.filterCategoriesByID(innerID,outerID)[ind].id =__id
+  
  
 }
 
@@ -275,9 +306,63 @@ selectDateFieldCondition(event:any,ind:any,name:any,innerID:any,outerID:any){
 
   }
 
- 
+  
 
- 
+  addBroker(){
+   this.spin = true
+   let data = this.brokerStructure
+
+   data.productInfo = this.categories
+
+   this.__addBroker.addBroker(data).subscribe(res=>{
+    if(res.response =='success'){
+      this.successReg =true
+      this.failureReg =false
+      this.spin =false
+    }
+
+    if(res.response =="Server failed"){
+     this.failureReg =true
+     this.successReg =false
+     this.spin =false
+
+    }
+  
+  })
+   
+  }
+
+  //Return  broker array necessary for editing functionality 
+
+  returnBrokerArray(id:any){
+    let brokerArray:any
+    for( var i of this.categories){
+      if(i.id ==id){
+       brokerArray =i
+      }
+      
+    }
+   return brokerArray 
+  }
+
+  returnBrokerOptions(innerID:any, outerID:any){
+    let optionArray:any
+    for( var i of this.categories){
+      if(i.id ==outerID){
+
+        for (var y of  i.options){
+          if (y.id ==innerID){
+            optionArray =y
+          }
+        }
+
+        return optionArray
+       
+      }
+    }
+
+  }
+
 
 
 }

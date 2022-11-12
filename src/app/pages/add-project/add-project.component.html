@@ -2,13 +2,20 @@
 
 <div>
     <div class = "form-group">
-        <ul class = "list-group list-group-flush">
+      <div *ngIf="spin">
+
+        <span class = "loader" style="margin-left: 50%; margin-top: 15%"></span>
+
+
+        </div>
+
+        <ul class = "list-group list-group-flush" *ngIf ="!spin">
             <li class ="list-group-item">
         <mat-toolbar class ="header-background">
-        <mat-form-field appearance="standard">
+        <mat-form-field appearance="standard" class ="form-control border-0" >
             <mat-label class ="fs-3 text-muted">Broker Name:</mat-label>
             
-            <input matInput placeholder="Project Name" class ="input" (input) ="editProjectName($event)" class ="fs-3">
+            <input matInput placeholder="Project Name" class ="input" (input) ="editProjectName($event)" class ="fs-3" [(ngModel)] = "brokerName">
             
 
           </mat-form-field>
@@ -43,12 +50,12 @@
                   
                         <mat-label>Field Name:</mat-label>
                         
-                        <input matInput placeholder="Field Name" class ="input" (input) = "editField('name',category.id,$event)" >
+                        <input matInput placeholder="Field Name" class ="input" (input) = "editField('name',category.id,$event)" [(ngModel)] ="returnBrokerArray(category.id).name">
                         </mat-form-field>
 
                     <mat-form-field appearance="standard" class ="form-control border-0">
                       <mat-label>Type</mat-label>
-                      <mat-select (selectionChange)= "getFieldType($event ,category.id)" >
+                      <mat-select (selectionChange)= "getFieldType($event ,category.id)" [(ngModel)] ="returnBrokerArray(category.id).type" >
                         
                         <mat-option value="Text"  >Text</mat-option>
                         <mat-option value="Text" >Number</mat-option>
@@ -95,7 +102,7 @@
                         
                         <mat-label>Option</mat-label>
                         
-                        <input matInput placeholder="Field Name" class ="input" (input) ="setConditionName(option.id, category.id,$event)"  >
+                        <input matInput placeholder="Field Name" class ="input" (input) ="setConditionName(option.id, category.id,$event)" [(ngModel)] = "returnBrokerOptions(option.id,category.id).name" >
                         </mat-form-field>
                         <span class="example-spacer"></span>
                         </mat-toolbar>
@@ -105,7 +112,7 @@
                             <h5 style ="margin-left: 15px;">Condition {{o +1}}</h5>
                         <mat-form-field appearance="standard" class ="form-control border-0">
                           <mat-label>Select Field you want to apply condition to:</mat-label>
-                        <mat-select  >
+                        <mat-select  [(ngModel)] ="filterCategoriesByID(option.id,category.id)[o].name" >
                           
                           <mat-option *ngFor  ="let field of categories"  [value] = "field.name" (click) ="selectedConditionType(o,field.name ,option.id,category.id)">
                             
@@ -123,7 +130,7 @@
         
         
           <span class ="" >
-            <div><input type = "radio" class = "form-check-input" name ="dateController" value ="specificDate" (change) ="selectDateFieldCondition($event,o,field.name ,option.id,category.id)"> Set as Specific Date
+            <div><input type = "radio" class = "form-check-input" name ="dateController" value ="specificDate" (change) ="selectDateFieldCondition($event,o,field.name ,option.id,category.id)" checked> Set as Specific Date
                 
           </div></span>
 
@@ -258,7 +265,14 @@
           </div>
           </li></ul>
 
-         <button class ="btn btn rounded-pill" style = "background:brown;color:#ffff" (click) ="saveBroker()" *ngIf= "categories.length !=0">Save</button>
-    </div>
+          <div *ngIf ="successReg"><button class = "btn btn-info" style ="border-radius: 50%;"><i class="bi bi-exclamation-triangle  text-white fs-4"
+            ></i></button> <span style = "margin-left:25px" class="col-sm-9 mt-2 fs-4" >Success !</span></div>
+
+            <div *ngIf ="failureReg"><button class = "btn btn-danger" style ="border-radius: 50%;"><i class="bi bi-exclamation-triangle  text-white fs-4"
+              ></i></button> <span style = "margin-left:25px" class="col-sm-9 mt-2 fs-4" >Server Failure !</span></div>
+
+
+         <div><button class ="btn btn rounded-pill mt-2" style = "background:brown;color:#ffff" (click) ="addBroker()" *ngIf= "categories.length !=0">Save</button>
+    </div></div>
 
 </div>
