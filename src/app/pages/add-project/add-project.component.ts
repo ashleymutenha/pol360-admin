@@ -2,6 +2,7 @@ import { Component, OnInit,ViewChild,ElementRef,Input } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
 import {AddBrokerService} from '../../core/services/add-broker.service';
 import { Router } from '@angular/router';
+import { EditBrokerService } from 'src/app/core/services/edit-broker.service';
 @Component({
   selector: 'app-add-project',
   templateUrl: './add-project.component.html',
@@ -34,6 +35,8 @@ project:any =[]
 
 @Input() brokerName:any
 
+@Input() editStatus:any
+
 fields:any =[]
 
 selectedType:any
@@ -44,10 +47,12 @@ currentIndex:any
 
 specificDate:any
 
-brokers:any =[]
+@Input() brokers:any =[]
 spin  = false
+duplicateName=false
+incompleteFields:any
 
-  constructor(private __addBroker:AddBrokerService,private router:Router) { }
+  constructor(private __addBroker:AddBrokerService,private router:Router,private __editBroker:EditBrokerService) { }
 
   ngOnInit(): void {
 
@@ -72,7 +77,7 @@ spin  = false
     this.fields.splice(ind,1)
   }
 
-  addField(){
+  addField(currentMaxID:any){
 
     let fieldStructure ={
       'id':0,
@@ -89,15 +94,33 @@ spin  = false
     }
 
     else{
-      id = this.categories[this.categories.length -1].id+1
+      let ids:any =[]
+      for(var t of this.categories){
+        ids.push(t.id)
+      }
+      let setID = Math.max(...ids)+1
+      id = setID
 
     }
 
     fieldStructure.id =id
-
+    
+    if(currentMaxID =='None'){
     this.categories.push(fieldStructure)
-    this.fields.push(fieldStructure)
+    
+    }
 
+    else{
+      let ind:any
+     
+
+      for(var i of this.categories){
+        if(i.id ==currentMaxID){
+          ind = this.categories.indexOf(i)
+        }
+      }
+      this.categories.splice(ind+1,0,fieldStructure)
+    }
     
   }
 
@@ -130,7 +153,7 @@ spin  = false
    
   }
 
-
+ //applies to when field type is dropdown
   addOption(id:any,event:any){
    
     let optionStructure = {
@@ -149,7 +172,12 @@ spin  = false
       }
 
      else{
-       __id = e.options[e.options.length -1].id+1 
+      let __ids:any =[]
+      for(var t of e.options){
+        __ids.push(t.id)
+      }
+      let setID = Math.max(...__ids)+1
+      __id = setID
      }
 
     optionStructure.id =__id
@@ -161,6 +189,7 @@ spin  = false
 
   }
 
+  //applies when field type is dropdown and a condition is added for an option
   setConditionName(innerID:any ,outerID:any,event:any){
 
     for(var e of this.categories){
@@ -173,6 +202,8 @@ spin  = false
       }
     }
   }
+
+  //applies when field type is dropdown and a condition is added for an option
 
  addCondition(innerID:any ,outerID:any,event:any){
   
@@ -191,6 +222,8 @@ spin  = false
       }
     }
   }
+
+  //returns a slice of conditions array for a given option
 
   filterCategoriesByID(innerID:any ,outerID:any){
 
@@ -243,6 +276,7 @@ selectedConditionType(ind:any,name:any,innerID:any,outerID:any){
 
         this.showDateCondition = "specificDate"
         this.filterCategoriesByID(innerID,outerID)[ind].value ={'specificDate':''}
+        this.filterCategoriesByID(innerID,outerID)[ind].valueType ='specificDate'
 
       
       }
@@ -309,27 +343,148 @@ selectDateFieldCondition(event:any,ind:any,name:any,innerID:any,outerID:any){
   
 
   addBroker(){
-   this.spin = true
+   
    let data = this.brokerStructure
+
+   if(data.brokerName.length==0){
+    if(this.brokerName.length!=0){
+      data.brokerName =this.brokerName
+    }
+   }
 
    data.productInfo = this.categories
 
-   this.__addBroker.addBroker(data).subscribe(res=>{
-    if(res.response =='success'){
-      this.successReg =true
-      this.failureReg =false
-      this.spin =false
-    }
+   console.log("Data>>>", data)
 
-    if(res.response =="Server failed"){
-     this.failureReg =true
-     this.successReg =false
-     this.spin =false
+   if(this.checkIfFieldsAreCompleted(data) ==0){
+    this.incompleteFields =true
+    this.successReg =false
+    this.failureReg =false
+    this.duplicateName =false
+   }
 
+   else{
+    this.incompleteFields =false
+    this.successReg =false
+    this.failureReg =false
+    this.duplicateName =false
+
+    if(this.editStatus ==false){
+      let count =0
+    for(var i of this.brokers){
+      if (i.brokerName ==data.brokerName){
+        count+=1
+      }
     }
-  
-  })
+    console.log("NNN",count)
+    if(count>0){
+    this.duplicateName =true
+    }
+    else{
+      this.callAddBrokerApi(data)
+      this.duplicateName =false
+    }
+      
+    }
+    else{
+      this.spin =true
+      this.__editBroker.editBroker(data).subscribe(res=>{
+         console.log("edit Response", res)
+        if(res.response =='success'){
+          this.spin =false
+          this.successReg =true
+        }
+
+      })
+    }
+    
    
+   
+   
+  }
+}
+
+  callAddBrokerApi(data:any){
+    this.incompleteFields =false
+    this.spin = true
+    this.__addBroker.addBroker(data).subscribe(res=>{
+      if(res.response =='success'){
+        this.successReg =true
+        this.failureReg =false
+        this.spin =false
+        this.incompleteFields =false
+        this.duplicateName =false
+      }
+  
+      if(res.response =="Server failed"){
+       this.failureReg =true
+       this.successReg =false
+       this.spin =false
+       this.incompleteFields =false
+       this.duplicateName =false
+  
+  
+      }})
+    
+  
+  
+
+  }
+
+//validates to check whether all relevant fields are filled up before calling api
+  checkIfFieldsAreCompleted(data:any){
+    let returnedNumber =1
+    
+    if(data.brokerName.length ==0){
+      returnedNumber = 0
+    }
+
+    for(var i of data.productInfo){
+      if(i.name.length ==0 ||i.type.length ==0){
+        returnedNumber =0
+      }
+      if(i.type =='Dropdown'){
+        if(i.options.length ==0)
+        {
+          returnedNumber =0
+        }
+        if(i.options.length!=0){
+          for(var condition of i.options){
+            if(condition.name.length ==0){
+              returnedNumber =0
+            }
+
+            if(condition.conditions.length !=0){
+              for(var cond of condition.conditions){
+                if(cond.name.length ==0){
+                  returnedNumber =0
+                }
+                if(cond.type =='Date')
+                {
+                  if(cond.valueType =='specificDate'){
+                    if (cond.value.specificDate.length ==0){
+                      returnedNumber =0
+                    }
+                  }
+                  if(cond.valueType =='numericBoundaries'){
+                    if (cond.value.MaximumNumber.length ==0){
+                      returnedNumber =0
+                    }
+                  }
+
+                  if(cond.valueType =='dateBoundaries'){
+                    if (cond.value.MaximumDate.length ==0){
+                      returnedNumber =0
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    return returnedNumber
   }
 
   //Return  broker array necessary for editing functionality 

@@ -32,10 +32,10 @@
                                 <li class ="list-group-item">
                                     <h4 class ="text-muted"> <i class="bi bi-gear-wide-connected" style ="margin-right: 10px;"></i> Default Broker</h4>
 
-                                    <div class = "mt-1" *ngIf ="activeBroker !=null"><h5><strong>{{activeBroker}}</strong></h5></div>
+                                    <div class = "mt-1" *ngIf ="activeBroker !=''"><h5><strong>{{activeBroker}}</strong></h5></div>
 
-                                    <div *ngIf ="activeBroker ==null"><button class = "btn btn" style ="border-radius: 50%; background:brown;color:white"><i class="bi bi-exclamation-triangle  text-white fs-5"
-                                        ></i></button> <span style = "margin-left:15px;color:brown" class="col-sm-9 mt-2 fs-5" >No default Broker Set!</span></div>
+                                    <div *ngIf ="activeBroker== ''"><button class = "btn btn" style ="border-radius: 50%; background:brown;color:white"><i class="bi bi-exclamation-triangle  text-white fs-5"
+                                        ></i></button> <span style = "margin-left:15px;color:brown" class="col-sm-9 mt-2 fs-5" >No default!</span></div>
 
                                 </li>
 
@@ -139,7 +139,7 @@
             </div>
 
 
-<app-add-project></app-add-project>
+<app-add-project [editStatus] ="editStatus" [brokers] ="brokers"></app-add-project>
 
 
 
@@ -161,7 +161,7 @@
             </div>
 
 
-<app-add-project [categories]  = "brokerTobeEdited" [brokerName] ="brokerName"></app-add-project>
+<app-add-project [categories]  = "brokerTobeEdited" [brokerName] ="brokerName" [editStatus] ="editStatus"></app-add-project>
 
 
 
